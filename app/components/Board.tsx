@@ -6,12 +6,12 @@ import React, { useEffect, useState } from 'react'
 import {DragDropContext,Droppable} from "react-beautiful-dnd";
 
 function Board() {
-  const getBoard =useBearStore((state)=>state.getBoard);
+  const [board,getBoard] =useBearStore((state)=>[state.board,state.getBoard]);
   
   useEffect(()=>{    
     getBoard()
-  },[])
-
+  },[getBoard])
+  console.log(board);
   return (
     <button>hello </button>
     // <DragDropContext onDragEnd>
