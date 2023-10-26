@@ -3,15 +3,17 @@ import { create } from 'zustand'
 
 interface BoardStore {
   board:any;
-  getBoard:()=>void
+  getBoard:()=>any
 }
 
-const useBearStore = create<BoardStore>((set) => ({
+export const useBearStore = create<BoardStore>((set) => ({
   board: {
     columns:new Map<string,string>()
   },
   getBoard:async()=>{
-    const board =await getTodosGroupedByColumn();
+    const board = await getTodosGroupedByColumn();  
+    console.log(board);
+      
     set({board});
   }
 }))
