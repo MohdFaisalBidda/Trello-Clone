@@ -6,11 +6,14 @@ import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
 import Columns from "./Columns";
 
 function Board() {
-  const [board, getBoard, setBoardState] = useBearStore((state) => [
-    state.board,
-    state.getBoard,
-    state.setBoardState,
-  ]);
+  const [board, getBoard, setBoardState, updateTodoOfDB] = useBearStore(
+    (state) => [
+      state.board,
+      state.getBoard,
+      state.setBoardState,
+      state.updateTodoOfDB,
+    ]
+  );
 
   useEffect(() => {
     getBoard();
@@ -66,6 +69,21 @@ function Board() {
       setBoardState({ ...board, columns: newColumns });
     } else {
       //different column todo moved
+      const finishTodos = Array.from(finishedCol.todos);
+      finishTodos.splice(destination.index, 0, movedTodo);
+      const newColumns = new Map(board.columns);
+      const newCol: Column = {
+        id: startCol.id,
+        todos: newTodos,
+      };
+      newColumns.set(startCol.id, newCol);
+      newColumns.set(finishedCol.id, {
+        id: finishedCol.id,
+        todos: finishTodos,
+      });
+      //save to DB
+      updateTodoOfDB(movedTodo, finishedCol.id);
+      setBoardState({ ...board, columns: newColumns });
     }
   };
 
@@ -74,9 +92,7 @@ function Board() {
       <Droppable droppableId="board" direction="horizontal" type="column">
         {(provided) => (
           <div
-            className={`grid grid-cols-1 md:grid-cols-${
-              Array.from(board.columns).length
-            } gap-5 max-w-7xl mx-auto mt-10`}
+            className={`grid grid-cols-1 md:grid-cols-3 gap-5 max-w-7xl mx-auto mt-10`}
             {...provided.droppableProps}
             ref={provided.innerRef}
           >
