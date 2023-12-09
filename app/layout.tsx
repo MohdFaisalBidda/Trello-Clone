@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, Poppins } from 'next/font/google'
 import './globals.css'
+import Modal from './components/Modal'
 
 const inter = Poppins({ subsets: ['latin'] ,weight:"500"})
 
@@ -17,6 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>{children}</body>
+      <Modal/>
     </html>
   )
 }
