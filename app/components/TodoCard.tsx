@@ -1,5 +1,7 @@
 import { useBearStore } from "@/store/BoardStore";
-import React from "react";
+import getURL from "@/utils/getURL";
+import Image from "next/image";
+import React, { useEffect, useState } from "react";
 import {
   DraggableProvidedDragHandleProps,
   DraggableProvidedDraggableProps,
@@ -24,6 +26,20 @@ function TodoCard({
   dragHandleProps,
 }: Props) {
   const deleteTask = useBearStore((state) => state.deleteTask);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (todo.image) {
+      const fetchImage = async () => {
+        const url = await getURL(todo.image!);
+        if (url) {
+          setImageUrl(url.toString());
+        }
+      };
+
+      fetchImage();
+    }
+  }, [todo]);
 
   return (
     <div
@@ -41,6 +57,17 @@ function TodoCard({
           <BiSolidXCircle className="h-8 w-8" />
         </button>
       </div>
+      {imageUrl && (
+        <div className="w-full h-full rounded-b-md">
+          <Image
+            alt="Task Image"
+            src={imageUrl}
+            width={400}
+            height={200}
+            className="w-full object-contain rounded-b-md"
+          />
+        </div>
+      )}
     </div>
   );
 }

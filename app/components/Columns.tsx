@@ -20,8 +20,16 @@ const idToColumnText: {
 };
 
 function Columns({ id, todos, index }: Props) {
-  const [searchString] = useBearStore((state) => [state.searchString]);
+  const [searchString, setNewTaskType] = useBearStore((state) => [
+    state.searchString,
+    state.setNewTaskType,
+  ]);
   const openModal = useModalStore((state) => state.openModal);
+
+  const handleAddTodo = () => {
+    setNewTaskType(id);
+    openModal();
+  };
 
   return (
     <Draggable draggableId={id} index={index}>
@@ -85,7 +93,7 @@ function Columns({ id, todos, index }: Props) {
 
                   <div className="flex items-end justify-end p-2">
                     <button
-                      onClick={openModal}
+                      onClick={handleAddTodo}
                       className="text-green-500 hover:text-green-600"
                     >
                       <BiSolidPlusCircle className="h-10 w-10" />
